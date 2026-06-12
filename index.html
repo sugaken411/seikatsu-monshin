@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ER生活状況入力補助ツール</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f2f2f7; padding: 16px; margin: 0; }
+        h1 { font-size: 18px; text-align: center; color: #1c1c1e; margin-bottom: 20px; }
+        .section-title { font-size: 13px; font-weight: bold; color: #8e8e93; margin: 15px 0 5px 5px; text-transform: uppercase; }
+        .btn-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .btn { background-color: #ffffff; border: 1px solid #d1d1d6; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 500; color: #007aff; cursor: pointer; text-align: center; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+        .btn.active { background-color: #007aff; color: #ffffff; border-color: #007aff; }
+        .result-box { background-color: #ffffff; border: 1px solid #d1d1d6; border-radius: 12px; padding: 15px; margin-top: 25px; margin-bottom: 40px; }
+        .result-title { font-size: 14px; font-weight: bold; color: #1c1c1e; margin-bottom: 8px; }
+        textarea { width: 100%; width: -webkit-fill-available; height: 140px; border: none; resize: none; font-size: 14px; color: #3a3a3c; font-family: inherit; }
+        textarea:focus { outline: none; }
+    </style>
+</head>
+<body>
+
+    <h1>ER生活状況 タッチ入力</h1>
+
+    <div class="section-title">1. 発症前の生活</div>
+    <div class="btn-group" id="group-past">
+        <div class="btn" onclick="selectOption('past', '全自立（就労・活動的）')">全自立（活動的）</div>
+        <div class="btn" onclick="selectOption('past', '全自立（引きこもり傾向）')">全自立（引きこもり）</div>
+    </div>
+
+    <div class="section-title">2. 同居状況</div>
+    <div class="btn-group" id="group-living">
+        <div class="btn" onclick="selectOption('living', '家族と同居')">家族と同居</div>
+        <div class="btn" onclick="selectOption('living', '単身生活（独居）')">単身生活（独居）</div>
+    </div>
+
+    <div class="section-title">3. 主たる介助者・キーパーソン</div>
+    <div class="btn-group" id="group-keyperson">
+        <div class="btn" onclick="selectOption('keyperson', 'あり（同伴あり）')">あり（同伴あり）</div>
+        <div class="btn" onclick="selectOption('keyperson', '不在（身寄りなし含む）')">不在・身寄りなし</div>
+    </div>
+
+    <div class="section-title">4. 居住環境</div>
+    <div class="btn-group" id="group-home">
+        <div class="btn" onclick="selectOption('home', '戸建て住宅')">戸建て住宅</div>
+        <div class="btn" onclick="selectOption('home', '賃貸アパート・マンション')">アパート・マンション</div>
+    </div>
+
+    <div class="section-title">5. 内服管理状況</div>
+    <div class="btn-group" id="group-med">
+        <div class="btn" onclick="selectOption('med', '自己管理良好')">自己管理良好</div>
+        <div class="btn" onclick="selectOption('med', '管理能力低下・中断あり')">管理低下・中断あり</div>
+    </div>
+
+    <div class="section-title">6. 既存の社会資源・サービス</div>
+    <div class="btn-group" id="group-care">
+        <div class="btn" onclick="selectOption('care', '未申請')">未申請</div>
+        <div class="btn" onclick="selectOption('care', '申請済み・サービス利用あり')">申請済・サービスあり</div>
+    </div>
+
+    <div class="section-title">7. 認知機能・意思決定能力</div>
+    <div class="btn-group" id="group-cognitive">
+        <div class="btn" onclick="selectOption('cognitive', '問題なし（ただし動揺あり）')">問題なし・動揺あり</div>
+        <div class="btn" onclick="selectOption('cognitive', '低下・失語等で意思表示困難')">低下・意思表示困難</div>
+    </div>
+
+    <div class="result-box">
+        <div class="result-title">AmiVoice音読用テキスト</div>
+        <textarea id="output-text" readonly placeholder="すべてのボタンを選択すると、ここに音読用の文章が自動生成されます。"></textarea>
+    </div>
+
+    <script>
+        const selections = { past: '', living: '', keyperson: '', home: '', med: '', care: '', cognitive: '' };
+
+        function selectOption(category, value) {
+            selections[category] = value;
+            const parentMap = {
+                past: 'group-past', living: 'group-living', keyperson: 'group-keyperson',
+                home: 'group-home', med: 'group-med', care: 'group-care', cognitive: 'group-cognitive'
+            };
+            const buttons = document.getElementById(parentMap[category]).getElementsByClassName('btn');
+            for (let btn of buttons) {
+                if (btn.innerText === value || (btn.innerText.includes('独居') && value.includes('単身')) || (btn.innerText.includes('身寄りなし') && value.includes('不在')) || (btn.innerText.includes('活動的') && value.includes('就労')) || (btn.innerText.includes('引きこもり') && value.includes('引きこもり')) || (btn.innerText.includes('動揺あり') && value.includes('問題なし')) || (btn.innerText.includes('意思表示困難') && value.includes('低下'))) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            }
+            generateText();
+        }
+
+        function generateText() {
+            if (!selections.past || !selections.living || !selections.keyperson || !selections.home || !selections.med || !selections.care || !selections.cognitive) {
+                document.getElementById('output-text').value = "未選択の項目があります。すべてのボタンを選択してください。";
+                return;
+            }
+
+            // 看護記録の客観的事実ベースに沿って文章をビルド
+            let text = `発症前の生活、${selections.past}。`;
+            text += `同居状況、${selections.living}。`;
+            text += `主たる介助者キーパーソン、${selections.keyperson}。`;
+            text += `居住環境、${selections.home}。`;
+            text += `ADL移動手段、ベッド上絶対安静、自力動不可。`;
+            text += `内服管理状況、${selections.med}。`;
+            text += `既存の社会資源サービス利用、介護保険${selections.care}。`;
+            text += `認知機能意思決定能力、${selections.cognitive}。`;
+            text += `生活上の懸念点退院支援上の課題、主介護者の急変または環境変化による在宅生活破綻のリスクあり、多職種連携による生活再建の介入を要する。`;
+
+            document.getElementById('output-text').value = text;
+            document.getElementById('output-text').select();
+        }
+    </script>
+</body>
+</html>
