@@ -85,4 +85,443 @@
             <div class="btn" onclick="opt('env_bath', '風呂：なし', this)">風呂なし</div>
         </div>
         <div class="btn-group">
-            <div class="btn" onclick="opt('env_toilet', 'トイレ：洋式', this)">洋
+            <div class="btn" onclick="opt('env_toilet', 'トイレ：洋式', this)">洋式</div>
+            <div class="btn" onclick="opt('env_toilet', 'トイレ：和式', this)">和式</div>
+        </div>
+
+        <div class="sub-title">寝室</div>
+        <input type="text" id="input-bedroom" oninput="buildText()" placeholder="寝室：〇階（自由入力）">
+
+        <div class="sub-title">ベッド</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('env_bed_status', 'あり', this); toggleBed();">あり</div>
+            <div class="btn" onclick="opt('env_bed_status', 'なし', this); toggleBed();">なし</div>
+        </div>
+        <div id="div-bed-type" class="hidden">
+            <div class="btn-group">
+                <div class="btn" onclick="opt('env_bed_type', 'ベッド：あり（介護用）', this)">介護用</div>
+                <div class="btn" onclick="opt('env_bed_type', 'ベッド：あり（非介護用）', this)">非介護用</div>
+            </div>
+        </div>
+
+        <div class="sub-title">手すりがついている場所</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('env_bar_status', 'なし', this); toggleBar();">なし</div>
+            <div class="btn" onclick="opt('env_bar_status', 'あり', this); toggleBar();">あり</div>
+        </div>
+        <div id="div-bar-places" class="hidden">
+            <div class="btn-group triple">
+                <div class="btn" onclick="opt_multi('bar_genkan', '玄関', this)">玄関</div>
+                <div class="btn" onclick="opt_multi('bar_roka', '廊下', this)">廊下</div>
+                <div class="btn" onclick="opt_multi('bar_kaidan', '階段', this)">階段</div>
+            </div>
+            <div class="btn-group triple">
+                <div class="btn" onclick="opt_multi('bar_furo', '風呂場', this)">風呂場</div>
+                <div class="btn" onclick="opt_multi('bar_toilet', 'トイレ', this)">トイレ</div>
+            </div>
+            <input type="text" id="input-bar-other" oninput="buildText()" placeholder="その他（自由入力）" style="margin-top:6px;">
+        </div>
+
+        <div class="sub-title">段差</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('env_step_status', 'なし', this); toggleStep();">なし</div>
+            <div class="btn" onclick="opt('env_step_status', 'あり', this); toggleStep();">あり</div>
+        </div>
+        <input type="text" id="input-step-place" class="hidden" oninput="buildText()" placeholder="段差の場所（自由入力）">
+    </div>
+
+    <div class="block">
+        <div class="section-title">② 食事について</div>
+        <div class="btn-group triple">
+            <div class="btn" onclick="opt_multi('food_gaishoku', '外食', this)">外食</div>
+            <div class="btn" onclick="opt_multi('food_jisui_hon', '自炊（本人）', this)">自炊（本人）</div>
+            <div class="btn" onclick="opt_multi('food_jisui_fam', '自炊（家族）', this)">自炊（家族）</div>
+        </div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('food_taste', '味付け：濃い', this)">味付け：濃い</div>
+            <div class="btn" onclick="opt('food_taste', '味付け：薄い', this)">味付け：薄い</div>
+        </div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('food_like', '嗜好品：食べる', this)">嗜好品：食べる</div>
+            <div class="btn" onclick="opt('food_like', '嗜好品：食べない', this)">嗜好品：食べない</div>
+        </div>
+        <div class="sub-title">宅配弁当</div>
+        <input type="text" id="input-bento" oninput="buildText()" placeholder="例：週〇回（自由入力、空欄なら記載なし）">
+    </div>
+
+    <div class="block">
+        <div class="section-title">③ 既存サービス利用</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('srv_status', 'はい', this); toggleSrv();">はい（利用あり）</div>
+            <div class="btn" onclick="opt('srv_status', 'いいえ', this); toggleSrv();">いいえ（利用なし）</div>
+        </div>
+        
+        <div id="div-srv-yes" class="hidden">
+            <input type="text" id="input-srv-kaigo" oninput="buildText()" placeholder="訪問介護：〇回/週、内容など">
+            <input type="text" id="input-srv-kango" oninput="buildText()" placeholder="訪問看護：〇回/週、内容など">
+            <input type="text" id="input-srv-day" oninput="buildText()" placeholder="デイサービス：〇回/週、内容など">
+            <input type="text" id="input-srv-care" oninput="buildText()" placeholder="デイケア：〇回/週、内容など">
+            <input type="text" id="input-srv-tool" oninput="buildText()" placeholder="福祉用具：車椅子、ベッド、その他等">
+        </div>
+
+        <div id="div-srv-no" class="hidden">
+            <div class="sub-title">今後、サービスの利用を考えていますか？</div>
+            <div class="btn-group">
+                <div class="btn" onclick="opt('srv_future', '今後サービス利用：考えている', this)">考えている</div>
+                <div class="btn" onclick="opt('srv_future', '今後サービス利用：考えていない', this)">考えていない</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="block">
+        <div class="section-title">④⑤ 退院後の意向・転院希望</div>
+        <div class="sub-title">今後、退院後をどのように考えていますか</div>
+        <select id="select-hope-pt" onchange="buildText()">
+            <option value="">-- 患者様の意向を選んでください --</option>
+            <option value="患者様意向：自宅">自宅</option>
+            <option value="患者様意向：転院">転院</option>
+            <option value="患者様意向：施設">施設</option>
+            <option value="患者様意向：わからない">わからない</option>
+        </select>
+        <select id="select-hope-fam" onchange="buildText()">
+            <option value="">-- ご家族様の意向を選んでください --</option>
+            <option value="ご家族様意向：自宅">自宅</option>
+            <option value="ご家族様意向：転院">転院</option>
+            <option value="ご家族様意向：施設">施設</option>
+            <option value="ご家族様意向：わからない">わからない</option>
+        </select>
+        <input type="text" id="input-hope-other" oninput="buildText()" placeholder="その他自由記載欄（自由入力）">
+
+        <div class="sub-title">希望する転院先がありますか</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('hosp_status', 'はい', this); toggleHosp();">はい</div>
+            <div class="btn" onclick="opt('hosp_status', 'いいえ', this); toggleHosp();">いいえ</div>
+        </div>
+        <input type="text" id="input-hosp-name" class="hidden" oninput="buildText()" placeholder="希望する病院名（自由入力）">
+    </div>
+
+    <div class="block">
+        <div class="section-title">⑥⑦ 介護体制・入院への心配事</div>
+        <div class="sub-title">退院後、家族の中で介護ができる方はいますか？</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('care_fam_status', 'はい', this); toggleCareFam();">はい</div>
+            <div class="btn" onclick="opt('care_fam_status', 'いいえ', this); toggleCareFam();">いいえ</div>
+        </div>
+        <select id="select-care-time" class="hidden" onchange="buildText()">
+            <option value="">-- 介護可能時間帯 --</option>
+            <option value="介護可能時間：常時">常時</option>
+            <option value="介護可能時間：日中">日中</option>
+            <option value="介護可能時間：夜間">夜間</option>
+        </select>
+        <input type="text" id="input-care-time-other" class="hidden" oninput="buildText()" placeholder="介護体制その他（自由入力）">
+
+        <div class="sub-title">経済的不安</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('worry_money', '経済的不安：あり', this)">あり</div>
+            <div class="btn" onclick="opt('worry_money', '経済的不安：なし', this)">なし</div>
+        </div>
+
+        <div class="sub-title">家庭内役割の負担</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('worry_role_status', 'あり', this); toggleRole();">あり</div>
+            <div class="btn" onclick="opt('worry_role_status', 'なし', this); toggleRole();">なし</div>
+        </div>
+        <div id="div-role-detail" class="hidden">
+            <div class="btn-group">
+                <div class="btn" onclick="opt_multi('role_kaji', '家事を担う人がいない', this)">家事担う人無</div>
+                <div class="btn" onclick="opt_multi('role_kodomo', '子どもの面倒を見る人がいない', this)">育児担う人無</div>
+            </div>
+            <input type="text" id="input-role-other" oninput="buildText()" placeholder="その他（自由入力）" style="margin-top:6px;">
+        </div>
+
+        <div class="sub-title">介護者の負担</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('worry_care_status', 'あり', this); toggleWorryCare();">あり</div>
+            <div class="btn" onclick="opt('worry_care_status', 'なし', this); toggleWorryCare();">なし</div>
+        </div>
+        <div id="div-worry-care-detail" class="hidden">
+            <div class="btn-group"><div class="btn" onclick="opt_multi('wc_1', '入院中の世話ができない・退院後介護にあたれない', this)">世話/介護不可</div></div>
+            <div class="btn-group"><div class="btn" onclick="opt_multi('wc_2', '家族が要介護状態・介護に自信がない', this)">要介護/自信無</div></div>
+            <div class="btn-group"><div class="btn" onclick="opt_multi('wc_3', '介護者に持病がある・家族が疾病や障害を持っている', this)">持病/障害あり</div></div>
+            <div class="btn-group"><div class="btn" onclick="opt_multi('wc_4', '高齢者世帯・家族が遠方', this)">高齢世帯/遠方</div></div>
+            <input type="text" id="input-worry-care-other" oninput="buildText()" placeholder="その他（自由入力）" style="margin-top:6px;">
+        </div>
+    </div>
+
+    <div class="result-box">
+        <div class="result-title">
+            <span>AmiVoice音読用テキスト（タップで全選択）</span>
+            <button class="reset-btn" onclick="resetAll()">リセット</button>
+        </div>
+        <textarea id="output-text" readonly onclick="this.select();" placeholder="シートを見ながらポチポチ選択してください。選択した内容がそのままここに並びます。"></textarea>
+    </div>
+
+    <script>
+        let dataset = {};
+
+        // 単一選択ボタンの制御
+        function opt(category, value, element) {
+            dataset[category] = value;
+            const siblingButtons = element.parentNode.querySelectorAll('.btn');
+            for (let b of siblingButtons) { b.classList.remove('active'); }
+            element.classList.add('active');
+            buildText();
+        }
+
+        // 複数選択ボタンの制御（トグル）
+        function opt_multi(category, value, element) {
+            if (dataset[category]) {
+                delete dataset[category];
+                element.classList.remove('active');
+            } else {
+                dataset[category] = value;
+                element.classList.add('active');
+            }
+            buildText();
+        }
+
+        // --- 直感的な出し分け（分岐）ロジック群 ---
+        function toggleEnvRoute() {
+            const type = dataset.env_type;
+            document.getElementById('div-house-floor').classList.toggle('hidden', type !== '一戸建て');
+            document.getElementById('div-mansion-floor').classList.toggle('hidden', type !== 'マンション・アパート');
+            if(type === '平屋') { delete dataset.house_floor; delete dataset.mansion_floor; }
+            toggleEV();
+        }
+
+        function toggleEV() {
+            const type = dataset.env_type;
+            const hFloor = dataset.house_floor;
+            const mFloor = dataset.mansion_floor;
+            
+            let showEV = false;
+            if (type === '一戸建て' && (hFloor === '2階建て' || hFloor === '3階建て以上')) showEV = true;
+            if (type === 'マンション・アパート' && mFloor === '2階以上居住') showEV = true;
+            
+            document.getElementById('div-ev').classList.toggle('hidden', !showEV);
+            if(!showEV) delete dataset.env_ev;
+            buildText();
+        }
+
+        function toggleBed() {
+            const hasBed = dataset.env_bed_status === 'あり';
+            document.getElementById('div-bed-type').classList.toggle('hidden', !hasBed);
+            if(!hasBed) delete dataset.env_bed_type;
+            buildText();
+        }
+
+        function toggleBar() {
+            const hasBar = dataset.env_bar_status === 'あり';
+            document.getElementById('div-bar-places').classList.toggle('hidden', !hasBar);
+            if(!hasBar) {
+                delete dataset.bar_genkan; delete dataset.bar_roka; delete dataset.bar_kaidan;
+                delete dataset.bar_furo; delete dataset.bar_toilet;
+                document.getElementById('input-bar-other').value = '';
+            }
+            buildText();
+        }
+
+        function toggleStep() {
+            const hasStep = dataset.env_step_status === 'あり';
+            document.getElementById('input-step-place').classList.toggle('hidden', !hasStep);
+            if(!hasStep) document.getElementById('input-step-place').value = '';
+            buildText();
+        }
+
+        function toggleSrv() {
+            const isYes = dataset.srv_status === 'はい';
+            document.getElementById('div-srv-yes').classList.toggle('hidden', !isYes);
+            document.getElementById('div-srv-no').classList.toggle('hidden', isYes);
+            if(isYes) delete dataset.srv_future;
+            buildText();
+        }
+
+        function toggleHosp() {
+            const isYes = dataset.hosp_status === 'はい';
+            document.getElementById('input-hosp-name').classList.toggle('hidden', !isYes);
+            if(!isYes) document.getElementById('input-hosp-name').value = '';
+            buildText();
+        }
+
+        function toggleCareFam() {
+            const isYes = dataset.care_fam_status === 'はい';
+            document.getElementById('select-care-time').classList.toggle('hidden', !isYes);
+            document.getElementById('input-care-time-other').classList.toggle('hidden', !isYes);
+            buildText();
+        }
+
+        function toggleRole() {
+            const isYes = dataset.worry_role_status === 'あり';
+            document.getElementById('div-role-detail').classList.toggle('hidden', !isYes);
+            buildText();
+        }
+
+        function toggleWorryCare() {
+            const isYes = dataset.worry_care_status === 'あり';
+            document.getElementById('div-worry-care-detail').classList.toggle('hidden', !isYes);
+            buildText();
+        }
+
+        // --- データの「そのまま箇条書き」結合ロジック ---
+        function buildText() {
+            let parts = [];
+
+            // 必須項目
+            const pastVal = document.getElementById('input-past').value.trim();
+            if(pastVal) parts.push(`発症前の生活：${pastVal}`);
+            if(dataset.base_cog) parts.push(`認知機能：${dataset.base_cog}`);
+
+            // ① 居住環境
+            let envParts = [];
+            if(dataset.env_type) {
+                let typeStr = dataset.env_type;
+                if(dataset.env_type === '一戸建て' && dataset.house_floor) typeStr += `（${dataset.house_floor}）`;
+                if(dataset.env_type === 'マンション・アパート' && dataset.mansion_floor) typeStr += `（${dataset.mansion_floor}）`;
+                envParts.push(typeStr);
+            }
+            if(dataset.env_ev) envParts.push(dataset.env_ev);
+            if(dataset.env_bath) envParts.push(dataset.env_bath);
+            if(dataset.env_toilet) envParts.push(dataset.env_toilet);
+            
+            const bedroomVal = document.getElementById('input-bedroom').value.trim();
+            if(bedroomVal) envParts.push(`寝室：${bedroomVal}`);
+            
+            if(dataset.env_bed_status) {
+                envParts.push(dataset.env_bed_status === 'あり' ? (dataset.env_bed_type || 'ベッドあり') : 'ベッドなし');
+            }
+            
+            if(dataset.env_bar_status === 'あり') {
+                let bars = [];
+                if(dataset.bar_genkan) bars.push(dataset.bar_genkan);
+                if(dataset.bar_roka) bars.push(dataset.bar_roka);
+                if(dataset.bar_kaidan) bars.push(dataset.bar_kaidan);
+                if(dataset.bar_furo) bars.push(dataset.bar_furo);
+                if(dataset.bar_toilet) bars.push(dataset.bar_toilet);
+                const barOther = document.getElementById('input-bar-other').value.trim();
+                if(barOther) bars.push(barOther);
+                envParts.push(`手すりあり（${bars.join('・') || '場所未特定'}）`);
+            } else if(dataset.env_bar_status === 'なし') {
+                envParts.push('手すりなし');
+            }
+
+            if(dataset.env_step_status === 'あり') {
+                const stepPlace = document.getElementById('input-step-place').value.trim();
+                envParts.push(`段差あり（${stepPlace || '場所未記入'}）`);
+            } else if(dataset.env_step_status === 'なし') {
+                envParts.push('段差なし');
+            }
+            if(envParts.length > 0) parts.push(`居住環境：${envParts.join('、')}`);
+
+            // ② 食事
+            let foodParts = [];
+            let ways = [];
+            if(dataset.food_gaishoku) ways.push(dataset.food_gaishoku);
+            if(dataset.food_jisui_hon) ways.push(dataset.food_jisui_hon);
+            if(dataset.food_jisui_fam) ways.push(dataset.food_jisui_fam);
+            if(ways.length > 0) foodParts.push(ways.join('・'));
+            if(dataset.food_taste) foodParts.push(dataset.food_taste);
+            if(dataset.food_like) foodParts.push(dataset.food_like);
+            const bentoVal = document.getElementById('input-bento').value.trim();
+            if(bentoVal) foodParts.push(`宅配弁当：${bentoVal}`);
+            if(foodParts.length > 0) parts.push(`食事について：${foodParts.join('、')}`);
+
+            // ③ 既存サービス
+            if(dataset.srv_status === 'はい') {
+                let srvList = [];
+                const kaigo = document.getElementById('input-srv-kaigo').value.trim(); if(kaigo) srvList.push(`訪問介護（${kaigo}）`);
+                const kango = document.getElementById('input-srv-kango').value.trim(); if(kango) srvList.push(`訪問看護（${kango}）`);
+                const day = document.getElementById('input-srv-day').value.trim(); if(day) srvList.push(`デイサービス（${day}）`);
+                const care = document.getElementById('input-srv-care').value.trim(); if(care) srvList.push(`デイケア（${care}）`);
+                const tool = document.getElementById('input-srv-tool').value.trim(); if(tool) srvList.push(`福祉用具貸与（${tool}）`);
+                parts.push(`既存サービス利用：あり（${srvList.join('、') || '詳細未入力'}）`);
+            } else if(dataset.srv_status === 'いいえ') {
+                parts.push(`既存サービス利用：なし` + (dataset.srv_future ? `（${dataset.srv_future}）` : ''));
+            }
+
+            // ④ ⑤ 意向
+            const hopePt = document.getElementById('select-hope-pt').value; if(hopePt) parts.push(hopePt);
+            const hopeFam = document.getElementById('select-hope-fam').value; if(hopeFam) parts.push(hopeFam);
+            const hopeOther = document.getElementById('input-hope-other').value.trim(); if(hopeOther) parts.push(`意向その他：${hopeOther}`);
+            
+            if(dataset.hosp_status === 'はい') {
+                const hospName = document.getElementById('input-hosp-name').value.trim();
+                parts.push(`希望転院先：あり（${hospName || '病院名未入力'}）`);
+            } else if(dataset.hosp_status === 'いいえ') {
+                parts.push(`希望転院先：なし`);
+            }
+
+            // ⑥ ⑦ 介護体制・心配事
+            if(dataset.care_fam_status === 'はい') {
+                let cTime = document.getElementById('select-care-time').value;
+                const cOther = document.getElementById('input-care-time-other').value.trim();
+                let cStr = `家族介護：あり（${cTime || '時間帯未選択'}`;
+                if(cOther) cStr += `、${cOther}`;
+                cStr += `）`;
+                parts.push(cStr);
+            } else if(dataset.care_fam_status === 'いいえ') {
+                parts.push(`家族介護：困難・不在`);
+            }
+
+            if(dataset.worry_money) parts.push(dataset.worry_money);
+
+            if(dataset.worry_role_status === 'あり') {
+                let roles = [];
+                if(dataset.role_kaji) roles.push(dataset.role_kaji);
+                if(dataset.role_kodomo) roles.push(dataset.role_kodomo);
+                const roleOther = document.getElementById('input-role-other').value.trim();
+                if(roleOther) roles.push(roleOther);
+                parts.push(`家庭内役割の負担：あり（${roles.join('・') || '内訳未記入'}）`);
+            } else if(dataset.worry_role_status === 'なし') {
+                parts.push(`家庭内役割の負担：なし`);
+            }
+
+            if(dataset.worry_care_status === 'あり') {
+                let wcs = [];
+                if(dataset.wc_1) wcs.push(dataset.wc_1);
+                if(dataset.wc_2) wcs.push(dataset.wc_2);
+                if(dataset.wc_3) wcs.push(dataset.wc_3);
+                if(dataset.wc_4) wcs.push(dataset.wc_4);
+                const wcOther = document.getElementById('input-worry-care-other').value.trim();
+                if(wcOther) wcs.push(wcOther);
+                parts.push(`介護者の負担：あり（${wcs.join('・') || '内訳未記入'}）`);
+            } else if(dataset.worry_care_status === 'なし') {
+                parts.push(`介護者の負担：なし`);
+            }
+
+            // AmiVoice用に「。」で区切って結合
+            const textarea = document.getElementById('output-text');
+            textarea.value = parts.length > 0 ? parts.join('。') + '。' : '';
+        }
+
+        function resetAll() {
+            dataset = {};
+            document.getElementById('output-text').value = '';
+            document.getElementById('input-past').value = '';
+            document.getElementById('input-bedroom').value = '';
+            document.getElementById('input-bar-other').value = '';
+            document.getElementById('input-step-place').value = '';
+            document.getElementById('input-bento').value = '';
+            document.getElementById('input-srv-kaigo').value = '';
+            document.getElementById('input-srv-kango').value = '';
+            document.getElementById('input-srv-day').value = '';
+            document.getElementById('input-srv-care').value = '';
+            document.getElementById('input-srv-tool').value = '';
+            document.getElementById('select-hope-pt').value = '';
+            document.getElementById('select-hope-fam').value = '';
+            document.getElementById('input-hope-other').value = '';
+            document.getElementById('input-hosp-name').value = '';
+            document.getElementById('select-care-time').value = '';
+            document.getElementById('input-care-time-other').value = '';
+            document.getElementById('input-role-other').value = '';
+            document.getElementById('input-worry-care-other').value = '';
+            
+            const activeButtons = document.querySelectorAll('.btn.active');
+            for (let b of activeButtons) { b.classList.remove('active'); }
+            
+            // すべての隠し要素を再非表示に
+            const hiddens = ['div-house-floor', 'div-mansion-floor', 'div-ev', 'div-bed-type', 'div-bar-places', 'input-step-place', 'div-srv-yes', 'div-srv-no', 'input-hosp-name', 'select-care-time', 'input-care-time-other', 'div-role-detail', 'div-worry-care-detail'];
+            hiddens.forEach(id => document.getElementById(id)?.classList.add('hidden'));
+        }
+    </script>
+</body>
+</html>
