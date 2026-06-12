@@ -3,110 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ER生活状況入力補助ツール</title>
+    <title>ER生活状況・退院支援入力ツール</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f2f2f7; padding: 16px; margin: 0; }
-        h1 { font-size: 18px; text-align: center; color: #1c1c1e; margin-bottom: 20px; }
-        .section-title { font-size: 13px; font-weight: bold; color: #8e8e93; margin: 15px 0 5px 5px; text-transform: uppercase; }
-        .btn-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
-        .btn { background-color: #ffffff; border: 1px solid #d1d1d6; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 500; color: #007aff; cursor: pointer; text-align: center; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f2f2f7; padding: 12px; margin: 0; padding-bottom: 50px; }
+        h1 { font-size: 16px; text-align: center; color: #1c1c1e; margin: 10px 0 20px 0; }
+        .block { background-color: #ffffff; border-radius: 12px; padding: 14px; margin-bottom: 16px; border: 1px solid #d1d1d6; }
+        .section-title { font-size: 14px; font-weight: bold; color: #1c1c1e; margin-bottom: 10px; border-left: 4px solid #007aff; padding-left: 6px; }
+        .sub-title { font-size: 12px; font-weight: bold; color: #8e8e93; margin: 8px 0 4px 0; }
+        .btn-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
+        .btn-group.triple { grid-template-columns: repeat(3, 1fr); }
+        .btn { background-color: #f2f2f7; border: 1px solid #e5e5ea; border-radius: 8px; padding: 12px 6px; font-size: 13px; font-weight: 500; color: #007aff; cursor: pointer; text-align: center; -webkit-tap-highlight-color: transparent; }
         .btn.active { background-color: #007aff; color: #ffffff; border-color: #007aff; }
-        .result-box { background-color: #ffffff; border: 1px solid #d1d1d6; border-radius: 12px; padding: 15px; margin-top: 25px; margin-bottom: 40px; }
-        .result-title { font-size: 14px; font-weight: bold; color: #1c1c1e; margin-bottom: 8px; }
-        textarea { width: 100%; width: -webkit-fill-available; height: 140px; border: none; resize: none; font-size: 14px; color: #3a3a3c; font-family: inherit; }
+        .result-box { background-color: #fef7e0; border: 1px solid #f5c400; border-radius: 12px; padding: 12px; position: sticky; bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .result-title { font-size: 13px; font-weight: bold; color: #b25e00; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        textarea { width: 100%; width: -webkit-fill-available; height: 110px; border: none; resize: none; font-size: 13px; color: #1c1c1e; font-family: inherit; background: transparent; }
         textarea:focus { outline: none; }
+        .reset-btn { background-color: #ff3b30; color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 11px; cursor: pointer; float: right; margin-top: -2px; }
     </style>
 </head>
 <body>
 
-    <h1>ER生活状況 タッチ入力</h1>
+    <h1>ER生活状況・退院支援入力補助</h1>
 
-    <div class="section-title">1. 発症前の生活</div>
-    <div class="btn-group" id="group-past">
-        <div class="btn" onclick="selectOption('past', '全自立（就労・活動的）')">全自立（活動的）</div>
-        <div class="btn" onclick="selectOption('past', '全自立（引きこもり傾向）')">全自立（引きこもり）</div>
+    <!-- 基本アセスメント（追加必須項目） -->
+    <div class="block">
+        <div class="section-title">基本アセスメント（看護師判断）</div>
+        <div class="sub-title">発症前の生活・同居状況</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('base_live', '全自立（活動的）', this)">全自立（活動的）</div>
+            <div class="btn" onclick="opt('base_live', '全自立（引きこもり）', this)">全自立（引籠り）</div>
+        </div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('base_with', '家族と同居', this)">家族と同居</div>
+            <div class="btn" onclick="opt('base_with', '単身生活（独居）', this)">単身生活（独居）</div>
+        </div>
+        <div class="sub-title">認知機能・意思決定能力</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('base_cog', '問題なし（ただし動揺あり）', this)">問題なし・動揺あり</div>
+            <div class="btn" onclick="opt('base_cog', '低下または失語等で意思表示困難', this)">低下・意思表示困難</div>
+        </div>
     </div>
 
-    <div class="section-title">2. 同居状況</div>
-    <div class="btn-group" id="group-living">
-        <div class="btn" onclick="selectOption('living', '家族と同居')">家族と同居</div>
-        <div class="btn" onclick="selectOption('living', '単身生活（独居）')">単身生活（独居）</div>
+    <!-- ① 居住環境について -->
+    <div class="block">
+        <div class="section-title">① 居住環境について</div>
+        <div class="sub-title">住居形態 / エレベーター</div>
+        <div class="btn-group triple">
+            <div class="btn" onclick="opt('env_type', '一戸建て', this)">一戸建て</div>
+            <div class="btn" onclick="opt('env_type', '平屋', this)">平屋</div>
+            <div class="btn" onclick="opt('env_type', 'アパート・マンション', this)">集合住宅</div>
+        </div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('env_ev', 'エレベーターあり', this)">EVあり</div>
+            <div class="btn" onclick="opt('env_ev', 'エレベーターなし・対象外', this)">EVなし/対象外</div>
+        </div>
+        <div class="sub-title">設備（風呂・トイレ・ベッド）</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('env_bath', '風呂あり', this)">風呂あり</div>
+            <div class="btn" onclick="opt('env_bath', '風呂なし', this)">風呂なし</div>
+        </div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('env_toilet', '洋式トイレ', this)">洋式トイレ</div>
+            <div class="btn" onclick="opt('env_toilet', '和式トイレ', this)">和式トイレ</div>
+        </div>
+        <div class="btn-group triple">
+            <div class="btn" onclick="opt('env_bed', 'ベッドあり（介護用）', this)">介護ベッド</div>
+            <div class="btn" onclick="opt('env_bed', 'ベッドあり（一般用）', this)">一般ベッド</div>
+            <div class="btn" onclick="opt('env_bed', 'ベッドなし（布団）', this)">ベッドなし</div>
+        </div>
+        <div class="sub-title">手すり / 段差</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('env_bar', '各所に手すりあり', this)">手すりあり</div>
+            <div class="btn" onclick="opt('env_bar', '手すりなし', this)">手すりなし</div>
+        </div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('env_step', '生活導線に段差あり', this)">段差あり</div>
+            <div class="btn" onclick="opt('env_step', '段差なし', this)">段差なし</div>
+        </div>
     </div>
 
-    <div class="section-title">3. 主たる介助者・キーパーソン</div>
-    <div class="btn-group" id="group-keyperson">
-        <div class="btn" onclick="selectOption('keyperson', 'あり（同伴あり）')">あり（同伴あり）</div>
-        <div class="btn" onclick="selectOption('keyperson', '不在（身寄りなし含む）')">不在・身寄りなし</div>
+    <!-- ② 食事について -->
+    <div class="block">
+        <div class="section-title">② 食事について</div>
+        <div class="sub-title">調理方法 / 宅配弁当</div>
+        <div class="btn-group triple">
+            <div class="btn" onclick="opt('food_way', '自炊（本人）', this)">自炊（本人）</div>
+            <div class="btn" onclick="opt('food_way', '自炊（家族）', this)">自炊（家族）</div>
+            <div class="btn" onclick="opt('food_way', '外食・惣菜メイン', this)">外食/惣菜</div>
+        </div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('food_del', '宅配弁当の利用あり', this)">宅配弁当あり</div>
+            <div class="btn" onclick="opt('food_del', '宅配弁当の利用なし', this)">宅配弁当なし</div>
+        </div>
     </div>
 
-    <div class="section-title">4. 居住環境</div>
-    <div class="btn-group" id="group-home">
-        <div class="btn" onclick="selectOption('home', '戸建て住宅')">戸建て住宅</div>
-        <div class="btn" onclick="selectOption('home', '賃貸アパート・マンション')">アパート・マンション</div>
+    <!-- ③ 介護サービス利用 -->
+    <div class="block">
+        <div class="section-title">③ 既存の介護・福祉サービス</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('sc_use', '既存の介護サービス利用あり', this)">サービス利用あり</div>
+            <div class="btn" onclick="opt('sc_use', 'サービス利用なし（未申請含む）', this)">利用なし（未申請含）</div>
+        </div>
+        <div class="sub-title">今後の利用希望（未利用の方）</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('sc_want', '今後のサービス利用希望あり', this)">利用希望あり</div>
+            <div class="btn" onclick="opt('sc_want', '今後のサービス利用希望なし', this)">利用希望なし</div>
+        </div>
     </div>
 
-    <div class="section-title">5. 内服管理状況</div>
-    <div class="btn-group" id="group-med">
-        <div class="btn" onclick="selectOption('med', '自己管理良好')">自己管理良好</div>
-        <div class="btn" onclick="selectOption('med', '管理能力低下・中断あり')">管理低下・中断あり</div>
+    <!-- ④ ⑤ 退院後の意向・転院希望 -->
+    <div class="block">
+        <div class="section-title">④⑤ 退院後の意向・転院希望</div>
+        <div class="sub-title">本人・家族の退院後希望先</div>
+        <div class="btn-group triple">
+            <div class="btn" onclick="opt('dis_hope', '自宅退院を希望', this)">自宅希望</div>
+            <div class="btn" onclick="opt('dis_hope', '転院または施設入所を希望', this)">転院/施設希望</div>
+            <div class="btn" onclick="opt('dis_hope', '今後の方向性は不明・わからない', this)">わからない</div>
+        </div>
+        <div class="sub-title">希望する転院先の有無</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('dis_hosp', '特定の希望転院先あり', this)">希望転院先あり</div>
+            <div class="btn" onclick="opt('dis_hosp', '希望転院先なし', this)">希望転院先なし</div>
+        </div>
     </div>
 
-    <div class="section-title">6. 既存の社会資源・サービス</div>
-    <div class="btn-group" id="group-care">
-        <div class="btn" onclick="selectOption('care', '未申請')">未申請</div>
-        <div class="btn" onclick="selectOption('care', '申請済み・サービス利用あり')">申請済・サービスあり</div>
+    <!-- ⑥ ⑦ 介護体制と入院への心配事 -->
+    <div class="block">
+        <div class="section-title">⑥⑦ 介護体制・入院への心配事</div>
+        <div class="sub-title">家族による介護体制 / 経済的不安</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('support_fam', '退院後家族による介護体制あり', this)">家族介護あり</div>
+            <div class="btn" onclick="opt('support_fam', '主たる介助者不在・家族介護困難', this)">家族介護困難/不在</div>
+        </div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('worry_money', '経済的不安あり', this)">経済的不安あり</div>
+            <div class="btn" onclick="opt('worry_money', '経済的不安なし', this)">経済的不安なし</div>
+        </div>
+        <div class="sub-title">家族の状況・介護負担リスク</div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('worry_burden', '家庭内役割の代行者不在（家事・育児等）', this)">役割代行者不在</div>
+            <div class="btn" onclick="opt('worry_burden', '役割負担なし', this)">役割負担なし</div>
+        </div>
+        <div class="btn-group">
+            <div class="btn" onclick="opt('worry_care', '高齢者世帯や持病等のため介護者負担リスク高', this)">介護者負担リスク高</div>
+            <div class="btn" onclick="opt('worry_care', '明らかな介助者負担リスクなし', this)">介助者リスクなし</div>
+        </div>
     </div>
 
-    <div class="section-title">7. 認知機能・意思決定能力</div>
-    <div class="btn-group" id="group-cognitive">
-        <div class="btn" onclick="selectOption('cognitive', '問題なし（ただし動揺あり）')">問題なし・動揺あり</div>
-        <div class="btn" onclick="selectOption('cognitive', '低下・失語等で意思表示困難')">低下・意思表示困難</div>
-    </div>
-
+    <!-- 【固定配置】AmiVoice音読エリア -->
     <div class="result-box">
-        <div class="result-title">AmiVoice音読用テキスト</div>
-        <textarea id="output-text" readonly placeholder="すべてのボタンを選択すると、ここに音読用の文章が自動生成されます。"></textarea>
+        <div class="result-title">
+            <span>AmiVoice音読用（タップで全選択）</span>
+            <button class="reset-btn" onclick="resetAll()">リセット</button>
+        </div>
+        <textarea id="output-text" readonly onclick="this.select();" placeholder="問診票を見ながら上のボタンをタップしてください。看護記録用の客観的テキストがここに自動生成されます。"></textarea>
     </div>
 
     <script>
-        const selections = { past: '', living: '', keyperson: '', home: '', med: '', care: '', cognitive: '' };
+        // 全項目を管理するオブジェクト
+        let dataset = {};
 
-        function selectOption(category, value) {
-            selections[category] = value;
-            const parentMap = {
-                past: 'group-past', living: 'group-living', keyperson: 'group-keyperson',
-                home: 'group-home', med: 'group-med', care: 'group-care', cognitive: 'group-cognitive'
-            };
-            const buttons = document.getElementById(parentMap[category]).getElementsByClassName('btn');
-            for (let btn of buttons) {
-                if (btn.innerText === value || (btn.innerText.includes('独居') && value.includes('単身')) || (btn.innerText.includes('身寄りなし') && value.includes('不在')) || (btn.innerText.includes('活動的') && value.includes('就労')) || (btn.innerText.includes('引きこもり') && value.includes('引きこもり')) || (btn.innerText.includes('動揺あり') && value.includes('問題なし')) || (btn.innerText.includes('意思表示困難') && value.includes('低下'))) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            }
-            generateText();
+        // ボタン選択時の処理
+        function opt(category, value, element) {
+            dataset[category] = value;
+            
+            // 同一グループ内のアクティブクラスをクリアして付け替え
+            const buttons = element.parentNode.parentNode.querySelectorAll(`.btn`);
+            // 直近の親要素のボタンだけを対象にする
+            const siblingButtons = element.parentNode.querySelectorAll('.btn');
+            for (let b of siblingButtons) { b.classList.remove('active'); }
+            element.classList.add('active');
+
+            buildText();
         }
 
-        function generateText() {
-            if (!selections.past || !selections.living || !selections.keyperson || !selections.home || !selections.med || !selections.care || !selections.cognitive) {
-                document.getElementById('output-text').value = "未選択の項目があります。すべてのボタンを選択してください。";
-                return;
-            }
+        // テキスト生成
+        function buildText() {
+            // 選択された項目だけを結合して、AmiVoice用に最適化
+            let parts = [];
+            
+            // 基本
+            if(dataset.base_live) parts.push(`発症前の生活は${dataset.base_live}`);
+            if(dataset.base_with) parts.push(`同居状況は${dataset.base_with}`);
+            if(dataset.support_fam) parts.push(`主たる介助者は${dataset.support_fam}`);
+            
+            // ①環境
+            let env = "居住環境は";
+            if(dataset.env_type) env += dataset.env_type;
+            if(dataset.env_ev) env += `、${dataset.env_ev}`;
+            if(dataset.env_bath) env += `、${dataset.env_bath}`;
+            if(dataset.env_toilet) env += `、${dataset.env_toilet}`;
+            if(dataset.env_bed) env += `、${dataset.env_bed}`;
+            if(dataset.env_bar) env += `、${dataset.env_bar}`;
+            if(dataset.env_step) env += `、${dataset.env_step}`;
+            if(env !== "居住環境は") parts.push(env);
 
-            // 看護記録の客観的事実ベースに沿って文章をビルド
-            let text = `発症前の生活、${selections.past}。`;
-            text += `同居状況、${selections.living}。`;
-            text += `主たる介助者キーパーソン、${selections.keyperson}。`;
-            text += `居住環境、${selections.home}。`;
-            text += `ADL移動手段、ベッド上絶対安静、自力動不可。`;
-            text += `内服管理状況、${selections.med}。`;
-            text += `既存の社会資源サービス利用、介護保険${selections.care}。`;
-            text += `認知機能意思決定能力、${selections.cognitive}。`;
-            text += `生活上の懸念点退院支援上の課題、主介護者の急変または環境変化による在宅生活破綻のリスクあり、多職種連携による生活再建の介入を要する。`;
+            parts.push("ADL移動手段はベッド上絶対安静、自力動不可");
 
-            document.getElementById('output-text').value = text;
-            document.getElementById('output-text').select();
+            // ②食事
+            let food = "食事状況は";
+            if(dataset.food_way) food += dataset.food_way;
+            if(dataset.food_del) food += `、${dataset.food_del}`;
+            if(food !== "食事状況は") parts.push(food);
+
+            // ③社会資源
+            if(dataset.sc_use) parts.push(`既存の社会資源サービス利用は${dataset.sc_use}`);
+            if(dataset.sc_want && dataset.sc_use && dataset.sc_use.includes('なし')) parts.push(`今後のサービス利用希望は${dataset.sc_want}`);
+
+            // 認知機能
+            if(dataset.base_cog) parts.push(`認知機能意思決定能力は${dataset.base_cog}`);
+
+            // ④⑤⑥⑦ 退院支援課題・心配事
+            let issues = "生活上の懸念点退院支援上の課題として、";
+            if(dataset.dis_hope) issues += `意向は${dataset.dis_hope}、`;
+            if(dataset.dis_hosp) issues += `${dataset.dis_hosp}、`;
+            if(dataset.worry_money) issues += `${dataset.worry_money}、`;
+            if(dataset.worry_burden) issues += `${dataset.worry_burden}、`;
+            if(dataset.worry_care) issues += `${dataset.worry_care}、`;
+            
+            issues += "環境変化に伴う在宅生活破綻のリスクを鑑み、病棟転帰後に多職種連携および医療社会福祉士による介入・生活再建の検討を要する。";
+            parts.push(issues);
+
+            // 読点「、」をAmiVoiceが認識しやすいように「。」に置換して結合
+            const textarea = document.getElementById('output-text');
+            textarea.value = parts.join('。') + '。';
+            textarea.select();
+        }
+
+        // リセット
+        function resetAll() {
+            dataset = {};
+            document.getElementById('output-text').value = '';
+            const activeButtons = document.querySelectorAll('.btn.active');
+            for (let b of activeButtons) { b.classList.remove('active'); }
         }
     </script>
 </body>
