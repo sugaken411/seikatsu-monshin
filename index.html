@@ -27,7 +27,7 @@
         input[type="text"]:focus, select:focus { outline: none; border-color: #007aff; background-color: #ffffff; }
         .hidden { display: none !important; }
         
-        .result-box { background-color: #ffffff; border-top: 1px solid #d1d1d6; position: fixed; bottom: 0; left: 0; right: 0; padding: 10px; box-shadow: 0 -4px 12px rgba(0,0,0,0.08); padding-bottom: calc(10px + env(safe-area-inset Bottom)); z-index: 1000; }
+        .result-box { background-color: #ffffff; border-top: 1px solid #d1d1d6; position: fixed; bottom: 0; left: 0; right: 0; padding: 10px; box-shadow: 0 -4px 12px rgba(0,0,0,0.08); padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000; }
         .result-title { font-size: 11px; font-weight: bold; color: #1c1c1e; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
         textarea { width: 100%; box-sizing: border-box; height: 90px; border: 1px solid #d1d1d6; border-radius: 8px; padding: 8px; font-size: 12px; color: #1c1c1e; font-family: inherit; resize: none; background-color: #f9f9f9; margin-bottom: 6px; }
         .action-bar { display: grid; grid-template-columns: 3fr 1fr; gap: 8px; }
@@ -58,14 +58,15 @@
             
             .section-title { font-size: 13pt; font-weight: bold; border-left: none; padding-left: 0; margin-bottom: 10pt; color: #000; border-bottom: 2px solid #000; padding-bottom: 3pt; }
             
-            /* 🖨️ チェックボックスを完璧に整列させるグリッド（紙面専用） */
+            /* チェックボックスを完璧に整列させるグリッド（紙面専用） */
             .print-grid-container { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 8pt; margin-top: 4pt; margin-bottom: 6pt; padding-left: 10pt; }
             .print-grid-container.dual { grid-template-columns: repeat(2, 1fr); }
+            .print-grid-container.quad { grid-template-columns: repeat(4, 1fr); }
             .print-item { display: flex; align-items: center; font-size: 11.5pt; }
             .print-item::before { content: "□ "; font-family: monospace; font-size: 14pt; margin-right: 4pt; font-weight: bold; }
             
-            /* 🖨️ ゆったりとした記入用スペース（点線・ライン） */
-            .print-line-space { display: block !important; margin-top: 8pt; margin-bottom: 4pt; padding-left: 10pt; font-size: 11pt; color: #444; width: 100%; box-sizing: border-box; }
+            /* ゆったりとした記入用スペース（点線・ライン） */
+            .print-line-space { display: block !important; margin-top: 8pt; margin-bottom: 4pt; padding-left: 10pt; font-size: 11pt; color: #000; width: 100%; box-sizing: border-box; }
             .print-line-under { display: inline-block; width: 80%; border-bottom: 1px dotted #000; height: 18pt; vertical-align: bottom; margin-left: 5pt; }
             .print-note-area { border: 1px dashed #666; height: 55pt; margin-top: 8pt; border-radius: 4px; padding: 5pt; position: relative; }
             
@@ -76,6 +77,7 @@
 </head>
 <body>
 
+    <!-- 🖨️ 患者用：印刷ヘッダー（紙面のみ） -->
     <div class="print-only-header">
         <div class="print-main-title">入院前の生活状況について（アンケート）</div>
         <div class="print-sub-desc">患者様が退院後も安心して生活できるよう、参考にさせていただきます。わかる範囲でご記入ください。</div>
@@ -93,6 +95,7 @@
         <button class="pc-print-btn" onclick="window.print();">🖨️ 院内PCからここを押すとA4用紙2枚で印刷できます</button>
     </div>
 
+    <!-- 👤 セクション0: 看護師記入項目（画面のみ） -->
     <div class="block" id="block-base">
         <div class="section-title">👤 基本アセスメント（看護師記入項目）</div>
         <div class="sub-title">発症前の生活</div>
@@ -107,17 +110,19 @@
         </div>
     </div>
 
+    <!-- 🏠 セクション1: お住まいの環境について -->
     <div class="block" id="block-env">
         <div class="section-title">1. お住まいの環境について</div>
         
-        <div class="print-grid-container">[cite: 5, 6]
-            <div class="print-item">一戸建て</div>[cite: 6]
-            <div class="print-item">マンション・アパート</div>[cite: 6]
-            <div class="print-item">その他</div>[cite: 6]
+        <div class="print-grid-container">
+            <div class="print-item">一戸建て</div>
+            <div class="print-item">マンション・アパート</div>
+            <div class="print-item">その他</div>
         </div>
-        <div class="print-line-space">※一戸建て・マンションの場合： <span class="print-line-under" style="width: 50%;">（  ）階建て の （  ）階 に居住</span></div>[cite: 6]
-        <div class="print-line-space">※その他の場合： <span class="print-line-under" style="width: 70%;"></span></div>[cite: 6]
+        <div class="print-line-space">※一戸建て・マンションの場合： <span class="print-line-under" style="width: 50%;">（  ）階建て の （  ）階 に居住</span></div>
+        <div class="print-line-space">※その他の場合： <span class="print-line-under" style="width: 70%;"></span></div>
         
+        <!-- 画面操作用ボタン（印刷時は非表示） -->
         <div class="btn-group triple">
             <div class="btn" onclick="opt('env_type', '一戸建て', this); toggleEnvRoute();">一戸建て</div>
             <div class="btn" onclick="opt('env_type', 'マンション・アパート', this); toggleEnvRoute();">マンション・アパート</div>
@@ -137,11 +142,11 @@
             </div>
         </div>
 
-        <div class="print-grid-container dual">[cite: 6]
-            <div class="print-item">階段：ある</div>[cite: 6]
-            <div class="print-item">階段：ない</div>[cite: 6]
-            <div class="print-item">エレベーター：ある</div>[cite: 6]
-            <div class="print-item">エレベーター：ない</div>[cite: 6]
+        <div class="print-grid-container dual">
+            <div class="print-item">階段：ある</div>
+            <div class="print-item">階段：ない</div>
+            <div class="print-item">エレベーター：ある</div>
+            <div class="print-item">エレベーター：ない</div>
         </div>
         <div id="div-ev" class="hidden">
             <div class="btn-group"><div class="btn" onclick="opt('env_ev', 'エレベーターあり', this)">EVあり</div><div class="btn" onclick="opt('env_ev', 'エレベーターなし', this)">EVなし</div></div>
@@ -164,10 +169,10 @@
             </div>
         </div>
 
-        <div class="print-grid-container triple">[cite: 6]
-            <div class="print-item">ベッド（非介護用）</div>[cite: 6]
-            <div class="print-item">ベッド（介護用）</div>[cite: 6]
-            <div class="print-item">布団（畳や床の上）</div>[cite: 6]
+        <div class="print-grid-container triple">
+            <div class="print-item">ベッド（非介護用）</div>
+            <div class="print-item">ベッド（介護用）</div>
+            <div class="print-item">布団（畳や床の上）</div>
         </div>
         <div class="btn-group triple">
             <div class="btn" onclick="opt('env_bed_status', 'ベッド（非介護用）', this)">ベッド（非介護用）</div>
@@ -175,16 +180,16 @@
             <div class="btn" onclick="opt('env_bed_status', '布団（フローリング・畳）', this)">布団</div>
         </div>
 
-        <div class="print-line-space" style="margin-bottom:0;">自宅で気になる場所（あてはまるものすべてにチェック）</div>[cite: 6]
-        <div class="print-grid-container triple">[cite: 6]
-            <div class="print-item">階段</div>[cite: 6]
-            <div class="print-item">段差</div>[cite: 6]
-            <div class="print-item">浴室（お風呂）</div>[cite: 6]
-            <div class="print-item">トイレ</div>[cite: 6]
-            <div class="print-item">特になし</div>[cite: 6]
-            <div class="print-item">その他</div>[cite: 6]
+        <div class="print-line-space" style="margin-bottom:0;">自宅で気になる場所（あてはまるものすべてにチェック）</div>
+        <div class="print-grid-container triple">
+            <div class="print-item">階段</div>
+            <div class="print-item">段差</div>
+            <div class="print-item">浴室（お風呂）</div>
+            <div class="print-item">トイレ</div>
+            <div class="print-item">特になし</div>
+            <div class="print-item">その他</div>
         </div>
-        <div class="print-line-space">※その他の具体的な場所： <span class="print-line-under" style="width: 70%;"></span></div>[cite: 6]
+        <div class="print-line-space">※その他の具体的な場所： <span class="print-line-under" style="width: 70%;"></span></div>
         
         <div class="btn-group triple">
             <div class="btn" onclick="opt_multi('bar_kaidan', '気になる場所：階段', this)">階段</div>
@@ -199,15 +204,16 @@
         <input type="text" id="input-step-place" class="hidden" oninput="buildText()" placeholder="気になる場所その他">
     </div>
 
+    <!-- 🍱 セクション2: 食事について -->
     <div class="block" id="block-food">
-        <div class="section-title">2. 食事について</div>[cite: 7]
-        <div class="sub-title">食事の準備をする人</div>[cite: 8]
-        <div class="print-grid-container triple">[cite: 8]
-            <div class="print-item">本人</div>[cite: 8]
-            <div class="print-item">家族</div>[cite: 8]
-            <div class="print-item">その他</div>[cite: 8]
+        <div class="section-title">2. 食事について</div>
+        <div class="sub-title" style="display:none;">食事の準備をする人</div>
+        <div class="print-grid-container triple">
+            <div class="print-item">本人</div>
+            <div class="print-item">家族</div>
+            <div class="print-item">その他</div>
         </div>
-        <div class="print-line-space">※その他（外部サービス、お惣菜など）： <span class="print-line-under" style="width: 60%;"></span></div>[cite: 8]
+        <div class="print-line-space">※その他（外部サービス、お惣菜など）： <span class="print-line-under" style="width: 60%;"></span></div>
         
         <div class="btn-group triple">
             <div class="btn" onclick="opt('food_prepare', '食事準備：本人', this)">本人</div>
@@ -215,11 +221,11 @@
             <div class="btn" onclick="opt('food_prepare', '食事準備：その他', this)">その他</div>
         </div>
         
-        <div class="sub-title">食事の量</div>[cite: 8]
-        <div class="print-grid-container triple">[cite: 8]
-            <div class="print-item">よく食べる</div>[cite: 8]
-            <div class="print-item">普通</div>[cite: 8]
-            <div class="print-item">少ない</div>[cite: 8]
+        <div class="sub-title" style="display:none;">食事の量</div>
+        <div class="print-grid-container triple">
+            <div class="print-item">よく食べる</div>
+            <div class="print-item">普通</div>
+            <div class="print-item">少ない</div>
         </div>
         <div class="btn-group triple">
             <div class="btn" onclick="opt('food_amount', '食事の量：よく食べる', this)">よく食べる</div>
@@ -227,14 +233,14 @@
             <div class="btn" onclick="opt('food_amount', '食事の量：少ない', this)">少ない</div>
         </div>
 
-        <div class="sub-title">味付け・嗜好品（画面入力用）</div>
+        <div class="sub-title" style="display:none;">味付け・嗜好品</div>
         <div class="btn-group"><div class="btn" onclick="opt('food_taste', '味付け：濃い', this)">濃い</div><div class="btn" onclick="opt('food_taste', '味付け：薄い', this)">薄い</div></div>
         <div class="btn-group"><div class="btn" onclick="opt('food_like', '嗜好品：食べる', this)">嗜好品：食べる</div><div class="btn" onclick="opt('food_like', '嗜好品：食べない', this)">嗜好品：食べない</div></div>
         
-        <div class="sub-title">配食サービス（お弁当の配達など）</div>[cite: 8]
-        <div class="print-grid-container dual">[cite: 8]
-            <div class="print-item">利用している</div>[cite: 8]
-            <div class="print-item">利用していない</div>[cite: 8]
+        <div class="sub-title" style="display:none;">配食サービス</div>
+        <div class="print-grid-container dual">
+            <div class="print-item">利用している</div>
+            <div class="print-item">利用していない</div>
         </div>
         <div class="print-line-space">※利用している場合： <span class="print-line-under" style="width: 50%;">週に（  ）回くらい</span></div>
         
@@ -245,20 +251,21 @@
         <input type="text" id="input-bento" oninput="buildText()" placeholder="宅配弁当の利用回数等">
     </div>
 
+    <!-- 🖨️ A4・2枚を確定させる改ページ境界線 -->
     <div class="print-page-break"></div>
 
+    <!-- 🤝 セクション3: 介護サービス・家族状況 -->
     <div class="block" id="block-srv">
-        <div class="section-title">3. 介護サービス・家族状況について</div>[cite: 9]
-        <div class="sub-title">現在利用しているサービス（あてはまるものすべて）</div>[cite: 10]
-        <div class="print-grid-container triple">[cite: 10]
-            <div class="print-item">なし</div>[cite: 10]
-            <div class="print-item">訪問看護</div>[cite: 10]
-            <div class="print-item">訪問介護（ヘルパー）</div>[cite: 10]
-            <div class="print-item">デイサービス</div>[cite: 10]
-            <div class="print-item">デイケア（リハビリ）</div>[cite: 10]
-            <div class="print-item">福祉用具レンタル</div>[cite: 10]
+        <div class="section-title">3. 介護サービス・福祉サービスなどの利用状況について</div>
+        <div class="print-grid-container triple">
+            <div class="print-item">なし</div>
+            <div class="print-item">訪問看護</div>
+            <div class="print-item">訪問介護（ヘルパー）</div>
+            <div class="print-item">デイサービス</div>
+            <div class="print-item">デイケア（リハビリ）</div>
+            <div class="print-item">福祉用具レンタル</div>
         </div>
-        <div class="print-line-space">※レンタル品目やその他のサービス内容：</div>[cite: 10]
+        <div class="print-line-space">※レンタル品目やその他のサービス内容：</div>
         <div class="print-note-area"></div>
         
         <div class="btn-group triple">
@@ -281,16 +288,17 @@
         </div>
     </div>
 
+    <!-- 🔮 セクション4: 退院後のご希望 -->
     <div class="block" id="block-hope">
-        <div class="section-title">4. 退院後のご希望</div>[cite: 11]
-        <div class="sub-title">退院後に過ごしたい場所</div>[cite: 12]
-        <div class="print-grid-container quad">[cite: 12]
-            <div class="print-item">自宅</div>[cite: 12]
-            <div class="print-item">施設</div>[cite: 12]
-            <div class="print-item">転院</div>[cite: 12]
-            <div class="print-item">未定</div>[cite: 12]
+        <div class="section-title">4. 退院後のご希望</div>
+        <div class="sub-title" style="display:none;">退院後に過ごしたい場所</div>
+        <div class="print-grid-container quad">
+            <div class="print-item">自宅</div>
+            <div class="print-item">施設</div>
+            <div class="print-item">転院</div>
+            <div class="print-item">未定</div>
         </div>
-        <div class="print-line-space">※転院・施設を希望される場合、具体的な希望先： <span class="print-line-under" style="width: 50%;"></span></div>[cite: 12]
+        <div class="print-line-space">※転院・施設を希望される場合、具体的な希望先： <span class="print-line-under" style="width: 50%;"></span></div>
         
         <div class="btn-group">
             <select id="select-hope-pt" onchange="buildText()">
@@ -307,14 +315,15 @@
         <input type="text" id="input-hosp-name" oninput="buildText()" placeholder="希望転院先・その他自由記載">
     </div>
 
+    <!-- ⚠️ セクション5: 主な介護者・心配なこと -->
     <div class="block" id="block-worry">
-        <div class="section-title">5. 主な介護者・入院にあたり心配なこと</div>[cite: 9, 12]
-        <div class="sub-title">退院後、主に介護を手伝ってくれる方（主な介護者）</div>[cite: 10]
-        <div class="print-grid-container dual">[cite: 10]
-            <div class="print-item">いる</div>[cite: 10]
-            <div class="print-item">いない</div>[cite: 10]
+        <div class="section-title">5. 主な介護者・入院にあたり心配なこと</div>
+        <div class="sub-title" style="display:none;">退院後主に介護を手伝ってくれる方</div>
+        <div class="print-grid-container dual">
+            <div class="print-item">いる</div>
+            <div class="print-item">いない</div>
         </div>
-        <div class="print-line-space">※「いる」と答えた方 ➡ 主な介護者の続柄：<span class="print-line-under" style="width: 25%;"></span>  ご年齢：<span class="print-line-under" style="width: 20%;">  歳</span></div>[cite: 10]
+        <div class="print-line-space">※「いる」と答えた方 ➡ 主な介護者の続柄：<span class="print-line-under" style="width: 25%;"></span>  ご年齢：<span class="print-line-under" style="width: 20%;">  歳</span></div>
         
         <div class="btn-group">
             <div class="btn" onclick="opt('care_fam_status', '主な介護者：いる', this); toggleCareFam();">手伝い：いる</div>
@@ -326,17 +335,17 @@
         </select>
         <input type="text" id="input-care-time-other" class="hidden" oninput="buildText()" placeholder="続柄、年齢、介護可能時間など">
 
-        <div class="sub-title">退院後の生活で心配なこと（あてはまるものすべて）</div>[cite: 12]
-        <div class="print-grid-container triple">[cite: 12]
-            <div class="print-item">歩行（移動）</div>[cite: 12]
-            <div class="print-item">食事</div>[cite: 12]
-            <div class="print-item">トイレ</div>[cite: 12]
-            <div class="print-item">入浴</div>[cite: 12]
-            <div class="print-item">お薬の管理</div>[cite: 12]
-            <div class="print-item">経済面（費用）</div>[cite: 12]
-            <div class="print-item">日中の介護者不在</div>[cite: 12]
-            <div class="print-item">特になし</div>[cite: 12]
-            <div class="print-item">その他</div>[cite: 12]
+        <div class="sub-title" style="display:none;">退院後の生活で心配なこと</div>
+        <div class="print-grid-container triple">
+            <div class="print-item">歩行（移動）</div>
+            <div class="print-item">食事</div>
+            <div class="print-item">トイレ</div>
+            <div class="print-item">入浴</div>
+            <div class="print-item">お薬の管理</div>
+            <div class="print-item">経済面（費用）</div>
+            <div class="print-item">日中の介護者不在</div>
+            <div class="print-item">特になし</div>
+            <div class="print-item">その他</div>
         </div>
         <div class="print-line-space">※具体的な心配事の内容（自由に記入してください）：</div>
         <div class="print-note-area" style="height: 70pt;"></div>
@@ -364,6 +373,7 @@
         </div>
     </div>
 
+    <!-- 画面固定エリア（PC/スマホのブラウザ上のみ表示） -->
     <div class="result-box">
         <div class="result-title">📋 電子カルテ用データ（改行セクション形式）</div>
         <textarea id="output-text" readonly placeholder="シートを見ながら各セクションを選択してください。"></textarea>
@@ -534,6 +544,8 @@
             document.querySelectorAll('select').forEach(s => s.value = '');
             document.querySelectorAll('.btn.active').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.block').forEach(b => b.classList.remove('error-highlight'));
+            const hiddens = ['div-house-floor', 'div-mansion-floor', 'div-ev', 'div-bedroom', 'div-bed-type', 'div-bar-places', 'input-step-place', 'div-srv-yes', 'div-srv-no', 'input-hosp-name', 'select-care-time', 'input-care-time-other', 'input-worry-money-detail', 'div-role-detail', 'div-worry-care-detail'];
+            hiddens.forEach(id => document.getElementById(id)?.classList.add('hidden'));
             buildText();
         }
         buildText();
